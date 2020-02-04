@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Button } from 'react-n
 import { Feather } from '@expo/vector-icons';
 import template from '../data/template'
 import { useQuery } from 'graphql-hooks'
+import { NavigationEvents } from 'react-navigation';
 
 const LIST_CALENDAR_QUERY = `
   query ListCalendarQuery {
@@ -29,7 +30,7 @@ function mapDataToTemplate(data) {
   return resultData
 }
 
-function Time({day, time, images}) {
+function Time({ day, time, images }) {
   return (
     <View key={`${day}-${time}`} style={styles.section}>
       {images.map(activity => (<Image
@@ -41,12 +42,12 @@ function Time({day, time, images}) {
   )
 }
 
-function CalendarDay({day, navigation, data}) {
+function CalendarDay({ day, navigation, data }) {
   return (
     <View key={day} style={styles.day}>
-      <TouchableOpacity 
-        style={styles.title} 
-        onPress={() => navigation.navigate('Day', {...data, day: day.toUpperCase()})}
+      <TouchableOpacity
+        style={styles.title}
+        onPress={() => navigation.navigate('Day', { ...data, day: day.toUpperCase() })}
       >
         <Text>{day}</Text>
         <Feather name="plus-square" size={32} color="#DDF1E3" />
@@ -71,6 +72,9 @@ function Calendar({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onWillFocus={() => refetchCalendars()}
+      />
       <View style={[styles.day, styles.leftColumn]}>
         <View style={styles.title}>
           <Text></Text>
@@ -109,7 +113,7 @@ Calendar.navigationOptions = {
   drawerLabel: 'Home',
   headerRight: () => {
     return (
-      <View style={{marginRight: 5, flex: 1, flexDirection: 'row'}}>
+      <View style={{ marginRight: 5, flex: 1, flexDirection: 'row' }}>
         <Button
           title="1"
           onPress={() => {
