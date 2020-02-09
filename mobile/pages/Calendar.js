@@ -32,9 +32,9 @@ function mapDataToTemplate(data) {
 
 function Time({ day, time, images }) {
   return (
-    <View key={`${day}-${time}`} style={styles.section}>
+    <View style={styles.section}>
       {images.map(activity => (<Image
-        key={`${day}-${time}-${activity.label}`}
+        key={`${day}-${time}-${activity.id}`}
         style={{ width: 65, height: 65, margin: 5 }}
         source={{ uri: activity.image }}
       />))}

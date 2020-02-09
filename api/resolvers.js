@@ -1,3 +1,5 @@
+const uuidv4 = require('uuid/v4');
+
 const data = require('./data')
 
 const resolvers = {
@@ -11,7 +13,7 @@ const resolvers = {
   },
   Mutation: {
     createCalendar(_, { calendar }) {
-      data.push(calendar)
+      data.push({...calendar, id: uuidv4() })
       return calendar
     }
   }

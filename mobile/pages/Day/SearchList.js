@@ -3,7 +3,7 @@ import { StyleSheet, View, ScrollView, TextInput } from 'react-native';
 import SearchImage from './SearchImage'
 import images from '../../data/images'
 
-export default function SearchList({day, refetchDay}) {
+export default function SearchList({day, setAddedImage}) {
   const [query, setQuery] = useState('');
   const [touchedImage, setTouchedImage] = useState(null);
 
@@ -23,7 +23,7 @@ export default function SearchList({day, refetchDay}) {
             touchedImage={touchedImage}
             setTouchedImage={setTouchedImage}
             day={day}
-            refetchDay={refetchDay}
+            setAddedImage={setAddedImage}
           />
         )}
       </ScrollView>

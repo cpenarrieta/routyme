@@ -1,49 +1,28 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import SearchList from './SearchList'
-import template from '../../data/template'
-import { useQuery } from 'graphql-hooks'
-
-const LIST_DAY_QUERY = `
-  query ListDayQuery($day: Day) {
-    calendar(day: $day) {
-      id
-      image
-      label
-      day
-      time
-      order
-    }
-  }
-`
-
-function mapDataToTemplate(data, day) {
-  let resultData = JSON.parse(JSON.stringify(template))
-
-  data.calendar.forEach(item => {
-    resultData[item.day][item.time].push(item)
-  })
-
-  return resultData[day]
-}
 
 export default function Day({ navigation }) {
+  const [addedImage, setAddedImage] = useState(null);
+
   const dayData = navigation.state.params
 
-  const {
-    data = { calendar: [] },
-    refetch: refetchDay
-  } = useQuery(LIST_DAY_QUERY, {
-    variables: {
-      day: dayData.day
-    }
-  })
-
-  let dataFiltered = mapDataToTemplate(data, dayData.day)
+  let dataFiltered = dayData
 
   let morning = dataFiltered.MORNING
   let afternoon = dataFiltered.AFTERNOON
   let night = dataFiltered.NIGHT
+
+  if (addedImage) {
+    if (addedImage.time === 'MORNING') {
+      morning.push(addedImage)
+    } else if (addedImage.time === 'AFTERNOON') {
+      afternoon.push(addedImage)
+    } else if (addedImage.time === 'NIGHT') {
+      night.push(addedImage)
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -70,7 +49,7 @@ export default function Day({ navigation }) {
           />)}
         </View>
       </View>
-      <SearchList day={dayData.day} refetchDay={refetchDay} />
+      <SearchList day={dayData.day} setAddedImage={setAddedImage} />
     </View>
   );
 }
@@ -88,18 +67,18 @@ const styles = StyleSheet.create({
     flexGrow: 55,
     alignItems: 'center',
     justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   dayContainer: {
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    flexGrow: 1,
-    zIndex: 1
+    height: '33.333333%'
   },
   image: {
     width: 100, 
     height: 100, 
-    margin: 5, 
-    zIndex: 2
+    margin: 5,
   }
 });

@@ -26,7 +26,7 @@ const CREATE_CALENDAR_MUTATION = `mutation CreateCalendar(
   }
 }`
 
-export default function SearchImage({ item, touchedImage, setTouchedImage, day, refetchDay }) {
+export default function SearchImage({ item, touchedImage, setTouchedImage, day, setAddedImage }) {
   const [createCalendar] = useMutation(CREATE_CALENDAR_MUTATION)
   const _animatedWidth = new Animated.Value(0);
 
@@ -48,13 +48,18 @@ export default function SearchImage({ item, touchedImage, setTouchedImage, day, 
 
   const closeDrawer = async (time) => {
     setTouchedImage({})
+    setAddedImage({
+      image: item.image,
+      label: '',
+      day: day,
+      time: time
+    })
     await createCalendar({ variables: {
       image: item.image,
       label: '',
       day: day,
       time: time
     }})
-    refetchDay()
   }
   
   return (
